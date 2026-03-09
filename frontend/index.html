@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Notizen App</title>
+</head>
+<body>
+
+    <h1>Notizen</h1>
+
+    <input type="text" id="note">
+    <button onclick="saveNote()">Speichern</button>
+
+    <div id="liste"></div>
+
+    <script>
+        function showNotes() {
+            fetch("http://localhost:3000/notes")
+            .then(function(res) {
+                return res.json()
+            })
+            .then(function(data) {
+                let text = ""
+
+                for (let i = 0; i < data.notes.length; i++) {
+                    text = text + "<p>" + data.notes[i] + " <button onclick='deleteNote(" + i + ")'>Löschen</button></p>"
+                }
+
+                document.getElementById("liste").innerHTML = text
+            })
+        }
+
+        function saveNote() {
+            let noteText = document.getElementById("note").value
+
+            fetch("http://localhost:3000/add", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ note: noteText })
+            })
+            .then(function() {
+                showNotes()
+            })
+        }
+
+        function deleteNote(id) {
+            fetch("http://localhost:3000/delete/" + id, {
+                method: "DELETE"
+            })
+            .then(function() {
+                showNotes()
+            })
+        }
+
+        showNotes()
+    </script>
+
+</body>
+</html>
