@@ -15,6 +15,10 @@ def get_notes():
 @app.route("/add", methods=["POST"])
 def add_note():
     data = request.json
+
+    if not data:
+        return {"msg": "keine daten"}
+
     note = data["note"]
     notes.append(note)
     return {"msg": "Notiz gespeichert"}
