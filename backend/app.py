@@ -24,4 +24,8 @@ def delete_note(id):
     notes.pop(int(id))
     return {"msg": "Notiz gelöscht"}
 
+@app.route("/test")
+def test():
+    return "API funktioniert"
+
 app.run(host="0.0.0.0", port=3000)
