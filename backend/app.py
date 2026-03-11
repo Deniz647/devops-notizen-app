@@ -1,10 +1,10 @@
 from flask import Flask, request
 from flask_cors import CORS
+from datetime import datetime
 import json
 import os
 
 app = Flask(__name__)
-
 CORS(app)
 
 DATEI_NAME = "notes.json"
@@ -25,6 +25,10 @@ notes = load_notes()
 def start():
     return "Notizen Backend läuft"
 
+@app.route("/health")
+def health():
+    return {"status": "ok"}
+
 @app.route("/notes", methods=["GET"])
 def get_notes():
     return {"notes": notes}
@@ -37,13 +41,21 @@ def add_note():
         return {"msg": "keine daten"}
 
     note = data["note"]
-    notes.append(note)
+    notes.insert(0, {
+        "text": note,
+        "time": datetime.now().strftime("%d.%m.%Y %H:%M")
+    })
     save_notes()
     return {"msg": "Notiz gespeichert"}
 
 @app.route("/delete/<id>", methods=["DELETE"])
 def delete_note(id):
-    notes.pop(int(id))
+    note_id = int(id)
+
+    if note_id < 0 or note_id >= len(notes):
+        return {"msg": "notiz nicht gefunden"}
+
+    notes.pop(note_id)
     save_notes()
     return {"msg": "Notiz gelöscht"}
 

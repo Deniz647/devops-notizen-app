@@ -24,7 +24,7 @@
                 let text = ""
 
                 for (let i = 0; i < data.notes.length; i++) {
-                    text = text + "<p>" + data.notes[i] + " <button onclick='deleteNote(" + i + ")'>Löschen</button></p>"
+                    text = text + "<p>" + data.notes[i].text + " (" + data.notes[i].time + ") <button onclick='deleteNote(" + i + ")'>Löschen</button></p>"
                 }
 
                 document.getElementById("liste").innerHTML = text
